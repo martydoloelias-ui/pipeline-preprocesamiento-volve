@@ -43,3 +43,11 @@ def cargar_datos(ruta=RUTA_DATOS):
     X = df[COLUMNAS_NUMERICAS + COLUMNAS_CATEGORICAS]
     y = df[TARGET]
     return X, y
+
+
+def dividir_datos(X, y):
+    """
+    Division train/test. Va ANTES de ajustar cualquier transformacion,
+    para que el preprocesamiento no "vea" los datos de test (data leakage).
+    """
+    return train_test_split(X, y, test_size=0.2, random_state=42)
