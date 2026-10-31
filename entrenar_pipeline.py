@@ -51,3 +51,29 @@ def dividir_datos(X, y):
     para que el preprocesamiento no "vea" los datos de test (data leakage).
     """
     return train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+def construir_pipeline():
+    """Arma el preprocesamiento (ColumnTransformer) + el modelo en un Pipeline."""
+    # Numericas: completar nulos con la mediana y escalar
+    numericas = Pipeline([
+        ("imputador", SimpleImputer(strategy="median")),
+        ("escalador", StandardScaler()),
+    ])
+
+    # Categoricas: completar nulos con el valor mas frecuente y codificar.
+    # handle_unknown="ignore" evita errores si aparece un pozo nuevo.
+    categoricas = Pipeline([
+        ("imputador", SimpleImputer(strategy="most_frequent")),
+        ("codificador", OneHotEncoder(handle_unknown="ignore")),
+    ])
+
+    preprocesador = ColumnTransformer([
+        ("num", numericas, COLUMNAS_NUMERICAS),
+        ("cat", categoricas, COLUMNAS_CATEGORICAS),
+    ])
+
+    return Pipeline([
+        ("preprocesamiento", preprocesador),
+        ("modelo", LinearRegression()),
+    ])
