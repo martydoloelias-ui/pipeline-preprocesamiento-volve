@@ -77,3 +77,11 @@ def construir_pipeline():
         ("preprocesamiento", preprocesador),
         ("modelo", LinearRegression()),
     ])
+
+
+def evaluar(pipeline, X_test, y_test):
+    """Predice sobre el conjunto de test e imprime las metricas."""
+    pred = pipeline.predict(X_test)
+    print(f"MAE : {mean_absolute_error(y_test, pred):.1f}")
+    print(f"RMSE: {mean_squared_error(y_test, pred) ** 0.5:.1f}")
+    print(f"R2  : {r2_score(y_test, pred):.3f}")
