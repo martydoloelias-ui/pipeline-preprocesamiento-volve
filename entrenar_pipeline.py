@@ -85,3 +85,28 @@ def evaluar(pipeline, X_test, y_test):
     print(f"MAE : {mean_absolute_error(y_test, pred):.1f}")
     print(f"RMSE: {mean_squared_error(y_test, pred) ** 0.5:.1f}")
     print(f"R2  : {r2_score(y_test, pred):.3f}")
+
+
+def guardar_pipeline(pipeline, ruta=RUTA_MODELO):
+    """Exporta el pipeline entrenado (preprocesamiento + modelo) con joblib."""
+    os.makedirs(os.path.dirname(ruta), exist_ok=True)
+    joblib.dump(pipeline, ruta)
+    print(f"Pipeline guardado en {ruta}")
+
+
+def main():
+    X, y = cargar_datos()
+    print(f"Filas: {len(X)} | nulos en X: {int(X.isna().sum().sum())}")
+
+    X_train, X_test, y_train, y_test = dividir_datos(X, y)
+    print(f"Train: {len(X_train)} | Test: {len(X_test)}")
+
+    pipeline = construir_pipeline()
+    pipeline.fit(X_train, y_train)  # se ajusta SOLO con train
+
+    evaluar(pipeline, X_test, y_test)
+    guardar_pipeline(pipeline)
+
+
+if __name__ == "__main__":
+    main()
